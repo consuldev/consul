@@ -1613,6 +1613,12 @@ ActiveRecord::Schema.define(version: 20200625133207) do
     t.datetime "updated_at",             null: false
   end
 
+  create_table "zipcodes", force: :cascade do |t|
+    t.string   "code"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "administrators", "users"
   add_foreign_key "budget_administrators", "administrators"
   add_foreign_key "budget_administrators", "budgets"
