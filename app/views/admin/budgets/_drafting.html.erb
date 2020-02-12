@@ -1,0 +1,15 @@
+<% if @budget.drafting? %>
+<div class="row">
+  <div class="small-12 column">
+    <%= t("admin.budgets.edit.drafting") %>
+    <br>
+    <%= link_to t("admin.budgets.edit.preview"),
+                budget_path(@budget),
+                class: "button hollow", target: "_blank" %>
+    <%= link_to t("admin.budgets.edit.publish"),
+                publish_admin_budget_path(@budget),
+                method: :patch, class: "button",
+                data: { confirm: t("admin.actions.confirm") } %>
+  </div>
+</div>
+<% end %>
