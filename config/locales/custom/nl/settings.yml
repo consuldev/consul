@@ -57,6 +57,8 @@ nl:
       facebook_login_description: "Sta gebruikers toe om in te loggen met een Facebook account"
       google_login_description: "Sta gebruikers toe om in te loggen met een Google account"
       wordpress_login_description: "Sta gebruikers toe om in te loggen met een Wordpress account"
+      irma_login: "IRMA login"
+      irma_login_description: "Sta gebruikers toe om in te loggen met een IRMA account"
       featured_proposals: "Uitgelichte initiatieven"
       featured_proposals_description: "Toon uitgelichte initiatieven op de initiatieven-pagina"
       signature_sheets_description: "Hiermee kunnen handtekeningen voor initiatieven of burgerbegrotingen ter plaatse worden verzameld en worden ingevoerd"
