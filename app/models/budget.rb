@@ -3,6 +3,7 @@ class Budget < ApplicationRecord
   include Sluggable
   include StatsVersionable
   include Reportable
+  include Imageable
 
   translates :name, touch: true
   include Globalizable
@@ -149,6 +150,19 @@ class Budget < ApplicationRecord
     current_phase&.balloting_or_later?
   end
 
+  def single_heading?
+    headings.count == 1
+  end
+
+  def enabled_phases_amount
+    phases.enabled.count
+  end
+
+  def current_enabled_phase_number
+    first_enabled_phase_position = phases.enabled.order(:id).find_index { |phase| phase.kind == self.phase }
+    first_enabled_phase_position.present? ? first_enabled_phase_position + 1 : 0
+  end
+
   def heading_price(heading)
     heading_ids.include?(heading.id) ? heading.price : -1
   end
@@ -212,6 +226,7 @@ class Budget < ApplicationRecord
         Budget::Phase.create(
           budget: self,
           kind: phase,
+          name: I18n.t("budgets.phase.#{phase}"),
           prev_phase: phases&.last,
           starts_at: phases&.last&.ends_at || Date.current,
           ends_at: (phases&.last&.ends_at || Date.current) + 1.month
