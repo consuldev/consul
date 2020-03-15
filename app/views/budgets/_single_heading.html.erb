@@ -1,0 +1,15 @@
+<div class="single-heading">
+  <% current_budget.groups.each do |group| %>
+    <% group.headings.sort_by_name.each do |heading| %>
+      <% if current_budget.informing? || current_budget.finished? %>
+        <h2><%= heading.name %></h2>
+        <p><%= current_budget.formatted_heading_price(heading) %></p>
+      <% else %>
+        <%= link_to budget_investments_path(current_budget.id, heading_id: heading.id) do %>
+          <h2><%= heading.name %></h2>
+          <p class="heading-amount"><%= current_budget.formatted_heading_price(heading) %></p>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
