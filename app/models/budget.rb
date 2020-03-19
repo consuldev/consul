@@ -26,6 +26,7 @@ class Budget < ApplicationRecord
   validates :phase, inclusion: { in: Budget::Phase::PHASE_KINDS }
   validates :currency_symbol, presence: true
   validates :slug, presence: true, format: /\A[a-z0-9\-_]+\z/
+  validates :main_button_url, presence: true, if: -> { main_button_text.present? }
 
   has_many :investments, dependent: :destroy
   has_many :ballots, dependent: :destroy

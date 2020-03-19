@@ -323,16 +323,11 @@ describe "Admin budgets" do
       end
     end
 
-    scenario "Show CTA only if there is a link" do
+    scenario "Show CTA button in public site if added" do
       visit edit_admin_budget_path(budget)
       expect(page).to have_content("Main call to action (optional)")
+
       fill_in "Text on the button", with: "Participate now"
-      click_button "Update Budget"
-
-      visit budgets_path
-      expect(page).not_to have_link("Participate now", href: "https://consulproject.org")
-
-      visit edit_admin_budget_path(budget)
       fill_in "The button takes you to (add a link)", with: "https://consulproject.org"
       click_button "Update Budget"
 
