@@ -9,8 +9,12 @@ class Admin::BudgetsController < Admin::BaseController
 
   before_action :load_budget, except: [:index, :new, :create]
   before_action :load_staff, only: [:new, :edit]
-  before_action :set_budget_mode, only: [:new, :create]
+  before_action :set_budget_mode, only: [:new, :create, :switch_group]
   load_and_authorize_resource
+
+  def new
+    @mode ||= "multiple"
+  end
 
   def index
     @budgets = Budget.send(@current_filter).order(created_at: :desc).page(params[:page])
@@ -35,9 +39,13 @@ class Admin::BudgetsController < Admin::BaseController
                 notice: I18n.t("admin.budgets.winners.calculated")
   end
 
+  def switch_group
+    redirect_to admin_budget_group_headings_path(@budget, selected_group_id, url_params)
+  end
+
   def update
     if @budget.update(budget_params)
-      redirect_to admin_budgets_path, notice: t("admin.budgets.update.notice")
+      redirect_to admin_budget_path(@budget), notice: t("admin.budgets.update.notice")
     else
       load_staff
       render :edit
@@ -48,11 +56,7 @@ class Admin::BudgetsController < Admin::BaseController
     @budget = Budget.new(budget_params)
 
     if @budget.save
-      if @mode == "single"
-        redirect_to new_admin_budget_group_path(@budget, mode: "single")
-      else
-        redirect_to admin_budget_path(@budget), notice: t("admin.budgets.create.notice")
-      end
+      redirect_to admin_budget_groups_path(@budget, mode: @mode), notice: t("admin.budgets.create.notice")
     else
       load_staff
       render :new
@@ -95,11 +99,21 @@ class Admin::BudgetsController < Admin::BaseController
       @valuators = Valuator.includes(:user).order(description: :asc).order("users.email ASC")
     end
 
+    def url_params
+      @mode.present? ? { mode: @mode } : {}
+    end
+
+    def selected_group_params
+      params.require(:budget).permit(:group_id) if params.key?(:budget)
+    end
+
+    def selected_group_id
+      selected_group_params[:group_id]
+    end
+
     def set_budget_mode
-      if params[:mode] || budget_heading_params
+      if params[:mode] || budget_heading_params.present?
         @mode = params[:mode] || budget_heading_params[:mode]
-      else
-        @mode = "multiple"
       end
     end
 end

@@ -4,19 +4,20 @@ class Admin::BudgetGroupsController < Admin::BaseController
   feature_flag :budgets
 
   before_action :load_budget
-  before_action :load_group, except: [:index, :new, :create]
-  before_action :set_budget_mode, only: [:new, :create]
+  before_action :load_groups, only: [:index, :create]
+  before_action :load_group, except: [:new, :index, :create]
+  before_action :set_budget_mode, only: [:index, :create]
 
   def index
-    @groups = @budget.groups.order(:id)
-  end
-
-  def new
     if @mode == "single"
       @group = @budget.groups.new("name_#{I18n.locale}" => @budget.name)
     else
       @group = @budget.groups.new
     end
+  end
+
+  def new
+    @group = @budget.groups.new
   end
 
   def edit
@@ -25,19 +26,22 @@ class Admin::BudgetGroupsController < Admin::BaseController
   def create
     @group = @budget.groups.new(budget_group_params)
     if @group.save
+      notice = t("admin.budget_groups.create.notice")
       if @mode == "single"
-        redirect_to new_admin_budget_group_heading_path(@group.budget, @group, mode: "single")
+        redirect_to admin_budget_group_headings_path(@group.budget, @group, url_params)
+      elsif @mode == "multiple"
+        redirect_to admin_budget_groups_path(@budget, url_params), notice: notice
       else
-        redirect_to groups_index, notice: t("admin.budget_groups.create.notice")
+        redirect_to admin_budget_path(@budget), notice: notice
       end
     else
-      render :new
+      render :index
     end
   end
 
   def update
     if @group.update(budget_group_params)
-      redirect_to groups_index, notice: t("admin.budget_groups.update.notice")
+      redirect_to admin_budget_path(@budget), notice: t("admin.budget_groups.update.notice")
     else
       render :edit
     end
@@ -45,10 +49,10 @@ class Admin::BudgetGroupsController < Admin::BaseController
 
   def destroy
     if @group.headings.any?
-      redirect_to groups_index, alert: t("admin.budget_groups.destroy.unable_notice")
+      redirect_to admin_budget_path(@budget), alert: t("admin.budget_groups.destroy.unable_notice")
     else
       @group.destroy!
-      redirect_to groups_index, notice: t("admin.budget_groups.destroy.success_notice")
+      redirect_to admin_budget_path(@budget), notice: t("admin.budget_groups.destroy.success_notice")
     end
   end
 
@@ -58,12 +62,16 @@ class Admin::BudgetGroupsController < Admin::BaseController
       @budget = Budget.find_by_slug_or_id! params[:budget_id]
     end
 
+    def load_groups
+      @groups = @budget.groups.order(:id)
+    end
+
     def load_group
       @group = @budget.groups.find_by_slug_or_id! params[:id]
     end
 
-    def groups_index
-      admin_budget_groups_path(@budget)
+    def url_params
+      @mode.present? ? { mode: @mode } : {}
     end
 
     def budget_group_params
@@ -76,10 +84,8 @@ class Admin::BudgetGroupsController < Admin::BaseController
     end
 
     def set_budget_mode
-      if params[:mode] || budget_heading_params
+      if params[:mode] || budget_heading_params.present?
         @mode = params[:mode] || budget_heading_params[:mode]
-      else
-        @mode = "multiple"
       end
     end
 end

@@ -11,7 +11,7 @@ describe "Admin budgets" do
                   "new_admin_budget_path",
                   {},
                   "imageable_fill_new_valid_budget",
-                  "Create Budget",
+                  "Continue to groups",
                   "New participatory budget created successfully!"
 
   context "Feature flag" do
@@ -163,7 +163,7 @@ describe "Admin budgets" do
   context "New" do
     scenario "Name is mandatory" do
       visit new_admin_budget_path
-      click_button "Create Budget"
+      click_button "Continue to groups"
 
       expect(page).not_to have_content "New participatory budget created successfully!"
       expect(page).to have_css(".is-invalid-label", text: "Name")
@@ -174,7 +174,7 @@ describe "Admin budgets" do
 
       visit new_admin_budget_path
       fill_in "Name", with: "Existing Name"
-      click_button "Create Budget"
+      click_button "Continue to groups"
 
       expect(page).not_to have_content "New participatory budget created successfully!"
       expect(page).to have_css(".is-invalid-label", text: "Name")
@@ -199,40 +199,134 @@ describe "Admin budgets" do
 
       fill_in "Name", with: "M30 - Summer campaign"
 
-      click_button "Create Budget"
-
+      click_button "Continue to groups"
       expect(page).to have_content "New participatory budget created successfully!"
+
+      visit admin_budget_path(Budget.last)
       expect(page).to have_content "This participatory budget is in draft mode"
       expect(page).to have_link "Preview budget"
       expect(page).to have_link "Publish budget"
     end
 
-    pending "Test backend and frontend for new optional 'Main call to action' feature"
+    scenario "Creation of a single-heading budget by steps" do
+      visit admin_budgets_path
+      click_button "Create new budget"
+      click_link "Create single heading budget"
 
-    context "Single heading budget" do
-      scenario "Is created by phases" do
-        visit admin_budgets_path
-        click_button "Create new budget"
-        click_link "Create single heading budget"
+      fill_in "Name", with: "Single heading budget"
+      click_button "Continue to groups"
 
-        fill_in "Name", with: "Single heading budget"
-        click_button "Continue"
+      expect(page).to have_content "New participatory budget created successfully!"
+      expect(page).to have_field "Group name", with: "Single heading budget"
+      click_button "Continue to headings"
 
-        expect(page).to have_field "Group name", with: "Single heading budget"
-        click_button "Continue"
+      fill_in "Heading name", with: "Heading name"
+      fill_in "Money amount", with: "1000000"
+      click_button "Continue to phases"
 
-        fill_in "Heading name", with: "Heading name"
-        fill_in "Amount", with: "1000000"
-        click_button "Continue"
+      expect(page).to have_selector "#budget-phases-table"
+      click_link "Finalize"
+      expect(page).to have_content "Single heading budget"
 
-        expect(page).to have_content "New participatory budget created successfully!"
+      expect(page).to have_selector "h3", count: 1
+      within "#group_#{Budget::Group.find_by(name: "Single heading budget").id}" do
+        expect(page).to have_selector "h3", text: "Single heading budget"
+        within "tbody" do
+          expect(page).to have_selector "tr", count: 1
+          expect(page).to have_content "Heading name"
+        end
+      end
+    end
 
-        budget = Budget.last
-        expect(budget.name).to eq "Single heading budget"
-        expect(budget.groups.count).to be 1
-        expect(budget.groups.first.name).to eq "Single heading budget"
-        expect(budget.groups.first.headings.count).to be 1
-        expect(budget.groups.first.headings.first.name).to eq "Heading name"
+    scenario "Creation of a multiple-headings budget by steps", :js do
+      visit admin_budgets_path
+      click_button "Create new budget"
+      click_link "Create multiple headings budget"
+
+      fill_in "Name", with: "Multiple headings budget"
+      click_button "Continue to groups"
+
+      expect(page).to have_content "New participatory budget created successfully!"
+      expect(page).to have_content "There are no groups."
+
+      click_button "Add new group"
+      fill_in "Group name", with: "All city"
+      click_button "Create new group"
+      expect(page).to have_content "Group created successfully!"
+      within("table") { expect(page).to have_content "All city" }
+      expect(page).not_to have_content "There are no groups."
+
+      click_button "Add new group"
+      fill_in "Group name", with: "Districts"
+      click_button "Create new group"
+      expect(page).to have_content "Group created successfully!"
+      within("table") { expect(page).to have_content "Districts" }
+
+      click_link "Continue to headings"
+      expect(page).to have_select("budget_groups_switcher", selected: "All city")
+      expect(page).to have_content "There are no headings."
+
+      click_button "Add new heading"
+      fill_in "Heading name", with: "All city"
+      fill_in "Money amount", with: "1000000"
+      click_button "Create new heading"
+      expect(page).to have_content "Heading created successfully!"
+      within("table") { expect(page).to have_content "All city" }
+      expect(page).not_to have_content "There are no headings."
+
+      select "Districts", from: "budget_groups_switcher"
+      expect(page).to have_content "There are no headings."
+
+      click_button "Add new heading"
+      fill_in "Heading name", with: "North"
+      fill_in "Money amount", with: "500000"
+      click_button "Create new heading"
+      expect(page).to have_content "Heading created successfully!"
+      within("table") { expect(page).to have_content "North" }
+      expect(page).not_to have_content "There are no headings."
+
+      click_button "Add new heading"
+      fill_in "Heading name", with: "South"
+      fill_in "Money amount", with: "500000"
+      click_button "Create new heading"
+      expect(page).to have_content "Heading created successfully!"
+      within("table") { expect(page).to have_content "South" }
+
+      click_link "Continue to phases"
+      expect(page).to have_selector "#budget-phases-table"
+
+      phase = Budget.last.phases.first
+      within("#budget_phase_#{phase.id}") { click_link "Edit content" }
+      fill_in "Phase's Name", with: "Custom phase name"
+      uncheck "Phase enabled"
+      click_button "Save changes"
+
+      expect(page).to have_content "Changes saved"
+      within "#budget_phase_#{phase.id}" do
+        expect(page).to have_content "Custom phase name"
+        expect(find("#phase_enabled")).not_to be_checked
+      end
+
+      click_link "Finalize"
+      expect(page).to have_content "Multiple headings budget"
+
+      expect(page).to have_selector "h3", count: 2
+
+      within "#group_#{Budget::Group.find_by(name: "All city").id}" do
+        expect(page).to have_selector "h3", text: "All city"
+        within "tbody" do
+          expect(page).to have_selector "tr", count: 1
+          expect(page).to have_content "All city"
+        end
+      end
+
+      within "#group_#{Budget::Group.find_by(name: "Districts").id}" do
+        expect(page).to have_selector "h3", text: "Districts"
+        within "tbody" do
+          expect(page).to have_selector "tr", count: 2
+          expect(page).to have_content "North"
+          expect(page).to have_content "South"
+        end
       end
     end
   end
@@ -369,18 +463,6 @@ describe "Admin budgets" do
       end
     end
 
-    scenario "Add group from edit view" do
-      visit edit_admin_budget_path(budget)
-
-      click_link "Add group"
-
-      fill_in "Group name", with: "New group"
-      click_button "Create new group"
-
-      visit edit_admin_budget_path(budget)
-      expect(page).to have_content "New group"
-    end
-
     scenario "Add heading from edit view" do
       visit edit_admin_budget_path(budget)
 
@@ -389,7 +471,7 @@ describe "Admin budgets" do
           click_link "Add heading"
 
           fill_in "Heading name", with: "New heading for #{group.name}"
-          fill_in "Amount", with: "1000"
+          fill_in "Money amount", with: "1000"
           click_button "Create new heading"
         end
 
@@ -437,13 +519,14 @@ describe "Admin budgets" do
 
   context "Update" do
     scenario "Update budget" do
-      visit edit_admin_budget_path(create(:budget))
+      budget = create(:budget)
+      visit edit_admin_budget_path(budget)
 
       fill_in "Name", with: "More trees on the streets"
       click_button "Update Budget"
 
-      expect(page).to have_content("More trees on the streets")
-      expect(page).to have_current_path(admin_budgets_path)
+      expect(page).to have_field "Name", with: "More trees on the streets"
+      expect(page).to have_current_path admin_budget_path(budget)
     end
 
     scenario "Deselect all selected staff", :js do

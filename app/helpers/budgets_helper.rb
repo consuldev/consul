@@ -121,15 +121,25 @@ module BudgetsHelper
     end
   end
 
+  def budget_new_step_phases?(step)
+    step == "phases"
+  end
+
   def budget_new_step_group?(step)
-    step == "groups" || step == "headings"
+    step == "groups" || step == "headings" || step == "phases"
   end
 
   def budget_new_step_headings?(step)
-    step == "headings"
+    step == "headings" || step == "phases"
   end
 
   def budget_single?(budget)
     budget.groups.headings.count == 1
+  end
+
+  def class_for_form(resource)
+    unless @mode == "single" || resource.errors.any?
+      "hide"
+    end
   end
 end
