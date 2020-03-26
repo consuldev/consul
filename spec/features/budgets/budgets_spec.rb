@@ -355,64 +355,56 @@ describe "Budgets" do
   end
 
   context "Show" do
-    scenario "List all groups" do
-      create(:budget_group, budget: budget)
-      create(:budget_group, budget: budget)
+    scenario "List all groups and headings" do
+      group1 = create(:budget_group, budget: budget)
+      group2 = create(:budget_group, budget: budget)
+      create(:budget_heading, group: group1)
+      create(:budget_heading, group: group2)
 
       visit budget_path(budget)
 
-      budget.groups.each { |group| expect(page).to have_link(group.name) }
+      budget.groups.each do |group|
+        expect(page).to have_content(group.name)
+
+        group.headings.each do |heading|
+          expect(page).to have_link "#{heading.name} €1,000,000"
+        end
+      end
     end
 
-    scenario "Links to unfeasible and selected if balloting or later" do
+    scenario "Links to unfeasible and not selected if balloting or later" do
       budget = create(:budget, :selecting)
       group = create(:budget_group, budget: budget)
 
       visit budget_path(budget)
 
-      expect(page).not_to have_link "See unfeasible investments"
-      expect(page).not_to have_link "See investments not selected for balloting phase"
-
-      click_link group.name
-
-      expect(page).not_to have_link "See unfeasible investments"
-      expect(page).not_to have_link "See investments not selected for balloting phase"
+      expect(page).to have_link "List of all unfeasible investment projects"
+      expect(page).not_to have_link "List of all investment projects"
+      expect(page).not_to have_link "List of all investment projects not selected for balloting"
 
       budget.update!(phase: :publishing_prices)
 
       visit budget_path(budget)
 
-      expect(page).not_to have_link "See unfeasible investments"
-      expect(page).not_to have_link "See investments not selected for balloting phase"
-
-      click_link group.name
-
-      expect(page).not_to have_link "See unfeasible investments"
-      expect(page).not_to have_link "See investments not selected for balloting phase"
+      expect(page).to have_link "List of all unfeasible investment projects"
+      expect(page).not_to have_link "List of all investment projects"
+      expect(page).not_to have_link "List of all investment projects not selected for balloting"
 
       budget.update!(phase: :balloting)
 
       visit budget_path(budget)
 
-      expect(page).to have_link "See unfeasible investments"
-      expect(page).to have_link "See investments not selected for balloting phase"
-
-      click_link group.name
-
-      expect(page).to have_link "See unfeasible investments"
-      expect(page).to have_link "See investments not selected for balloting phase"
+      expect(page).to have_link "List of all investment projects"
+      expect(page).to have_link "List of all unfeasible investment projects"
+      expect(page).to have_link "List of all investment projects not selected for balloting"
 
       budget.update!(phase: :finished)
 
       visit budget_path(budget)
 
-      expect(page).to have_link "See unfeasible investments"
-      expect(page).to have_link "See investments not selected for balloting phase"
-
-      click_link group.name
-
-      expect(page).to have_link "See unfeasible investments"
-      expect(page).to have_link "See investments not selected for balloting phase"
+      expect(page).to have_link "List of all investment projects"
+      expect(page).to have_link "List of all unfeasible investment projects"
+      expect(page).to have_link "List of all investment projects not selected for balloting"
     end
 
     scenario "Take into account headings with the same name from a different budget" do
@@ -426,13 +418,20 @@ describe "Budgets" do
       heading4 = create(:budget_heading, group: group2, name: "Queens")
 
       visit budget_path(budget)
-      click_link "New York"
 
-      expect(page).to have_css("#budget_heading_#{heading1.id}")
-      expect(page).to have_css("#budget_heading_#{heading2.id}")
+      within"#groups_and_headings" do
+        expect(page).to have_content group1.name
 
-      expect(page).not_to have_css("#budget_heading_#{heading3.id}")
-      expect(page).not_to have_css("#budget_heading_#{heading4.id}")
+        expect(page).to have_link("#{heading1.name} €1,000,000",
+                                  href: budget_investments_path(budget, heading_id: heading1.id))
+        expect(page).to have_link("#{heading2.name} €1,000,000",
+                                  href: budget_investments_path(budget, heading_id: heading2.id))
+
+        expect(page).not_to have_link("#{heading3.name} €1,000,000",
+                                      href: budget_investments_path(budget2, heading_id: heading3.id))
+        expect(page).not_to have_link("#{heading4.name} €1,000,000",
+                                      href: budget_investments_path(budget2, heading_id: heading4.id))
+      end
     end
 
     scenario "See results button is showed if the budget has finished for all users" do

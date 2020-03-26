@@ -16,8 +16,8 @@
   <% else %>
     <div id="budget_heading" class="expanded budget no-margin-top">
   <% end %>
-    <div class="row">
-      <div class="small-12 column text-center">
+      <div class="row">
+        <div class="small-12 column text-center">
           <span class="budget-title"><%= t("budgets.index.title") %></span>
           <h1><%= current_budget.name %></h1>
 
@@ -74,9 +74,9 @@
       <div class="small-12 column">
 
         <% if current_budget.single_heading? %>
-          <%= render "single_heading" %>
+          <%= render "single_heading", budget: current_budget %>
         <% else %>
-          <%= render "groups_and_headings" %>
+          <%= render "groups_and_headings", budget: current_budget %>
         <% end %>
 
         <% unless current_budget.informing? %>

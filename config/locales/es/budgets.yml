@@ -154,9 +154,7 @@ es:
       group: Grupo
       phase: Fase actual
       unfeasible_title: Proyectos de gasto inviables
-      unfeasible: Ver los proyectos inviables
       unselected_title: Proyectos no seleccionados para la votación final
-      unselected: Ver los proyectos no seleccionados para la votación final
       see_results: Ver resultados
     results:
       link: Resultados

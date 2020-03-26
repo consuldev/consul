@@ -79,7 +79,7 @@ describe "Budget Investments" do
     unfeasible_investment = create(:budget_investment, :unfeasible, heading: heading)
 
     visit budget_path(budget)
-    click_link "Health"
+    click_link "#{heading.name} #{budget.formatted_heading_price(heading)}"
 
     expect(page).to have_selector("#budget-investments .budget-investment", count: 3)
     investments.each do |investment|
@@ -97,7 +97,7 @@ describe "Budget Investments" do
                    create(:budget_investment, heading: heading)]
 
     visit budget_path(budget)
-    click_link "Health"
+    click_link "#{heading.name} #{budget.formatted_heading_price(heading)}"
 
     click_button "View mode"
 
@@ -528,7 +528,7 @@ describe "Budget Investments" do
       heading = create(:budget_heading, name: "Madrid",   group: group)
 
       visit budget_path(budget)
-      click_link "See unfeasible investments"
+      click_link "List of all unfeasible investment projects"
 
       click_link "All City"
 
@@ -549,7 +549,7 @@ describe "Budget Investments" do
 
       visit budget_path(budget)
 
-      click_link "See unfeasible investments"
+      click_link "List of all unfeasible investment projects"
 
       click_link "Districts"
       click_link "Barajas"
@@ -1707,7 +1707,7 @@ describe "Budget Investments" do
       heading = create(:budget_heading, name: "Madrid",   group: group)
 
       visit budget_path(budget)
-      click_link "See investments not selected for balloting phase"
+      click_link "List of all investment projects not selected for balloting"
 
       click_link "All City"
 
@@ -1727,7 +1727,7 @@ describe "Budget Investments" do
 
       visit budget_path(budget)
 
-      click_link "See investments not selected for balloting phase"
+      click_link "List of all investment projects not selected for balloting"
 
       click_link "Districts"
       click_link "Barajas"
