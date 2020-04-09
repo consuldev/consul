@@ -3,44 +3,43 @@
     <div class="small-12 column">
       <h2 class="text-center"><%= t("budgets.index.all_phases") %></h2>
 
-      <ul class="tabs" data-tabs id="budget_phases_tabs" data-deep-link="true">
+      <ul class="tabs" data-tabs id="budget_phases_tabs" data-deep-link="true" data-deep-link-smudge="true">
         <% current_budget.published_phases.each_with_index do |phase, index| %>
           <li class="tabs-title <%= "is-active" if phase == current_budget.current_phase %>">
-            <a href="#<%= index + 1 %>"
+            <a href="#<%= index + 1 %>-<%= budget_phase_name(phase).parameterize %>"
                class="<%= "current-phase" if phase == current_budget.current_phase %>">
               <% if phase == current_budget.current_phase %>
                 <span class="current-phase-timeline"><%= t("budgets.index.current_phase") %></span>
               <% end %>
 
               <span class="phase-number"><%= index + 1 %></span><br>
-              <% if phase.name.present? %>
-                <%= phase.name %>
-              <% else %>
-                <%= t("budgets.phase.#{phase.kind}") %>
-              <% end %>
+              <%= budget_phase_name(phase) %>
             </a>
           </li>
         <% end %>
       </ul>
 
       <div class="tabs-content" data-tabs-content="budget_phases_tabs">
-        <% current_budget.published_phases.each_with_index do |phase, index| %>
+        <% enabled_phases = current_budget.published_phases.to_a %>
+        <% enabled_phases.each_with_index do |phase, index| %>
           <div class="tabs-panel <%= "is-active" if phase == current_budget.current_phase %>"
-               id="<%= index + 1 %>">
+               id="<%= index + 1 %>-<%= budget_phase_name(phase).parameterize %>">
 
-            <% if current_budget.published_phases.first == phase %>
+            <% if enabled_phases.first == phase %>
               <span class="budget-prev-phase-disabled"></span>
             <% else %>
-              <a href="#<%= (index + 1) - 1 %>" title="<%= t("budgets.index.prev_phase") %>"
+              <a href="#<%= index %>-<%= budget_phase_name(enabled_phases[index - 1]).parameterize %>"
+                 title="<%= t("budgets.index.prev_phase") %>"
                  class="budget-prev-phase">
                 <span class="show-for-sr"><%= t("budgets.index.prev_phase") %></span>
               </a>
             <% end %>
 
-            <% if current_budget.published_phases.last == phase %>
+            <% if enabled_phases.last == phase %>
               <span class="budget-next-phase-disabled"></span>
             <% else %>
-              <a href="#<%= (index + 1) + 1 %>" title="<%= t("budgets.index.next_phase") %>"
+              <a href="#<%= index + 2 %>-<%= budget_phase_name(enabled_phases[index + 1]).parameterize %>"
+                 title="<%= t("budgets.index.next_phase") %>"
                  class="budget-next-phase">
                 <span class="show-for-sr"><%= t("budgets.index.next_phase") %></span>
               </a>
@@ -48,13 +47,7 @@
 
             <div id="<%= phase.kind.parameterize %>" class="row">
               <div class="small-12 medium-6 column">
-                <h3>
-                  <% if phase.name.present? %>
-                    <%= index + 1 %> <%= phase.name %>
-                  <% else %>
-                    <%= index + 1 %> <%= t("budgets.phase.#{phase.kind}") %>
-                  <% end %>
-                </h3>
+                <h3><%= budget_phase_name(phase) %></h3>
                 <p>
                   <%= l(phase.starts_at.to_date, format: :long) if phase.starts_at.present? %>
                   -

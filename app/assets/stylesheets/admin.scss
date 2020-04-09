@@ -349,15 +349,17 @@ $admin-text:     #434d54;
       height: $line-height * 2;
     }
 
-    [type]:not([type="submit"], [type="button"]),
+    [type]:not([type="submit"], [type="button"], [type="checkbox"], [type="radio"]),
     select {
       border: 2px solid $admin-border;
       border-radius: rem-calc(6);
       box-shadow: none;
+      margin-bottom: $line-height * 1.5;
     }
 
     label {
       color: $admin-title;
+      margin-bottom: $line-height / 2;
     }
 
     .locale-form {
@@ -371,7 +373,15 @@ $admin-text:     #434d54;
   .form-label {
     color: $admin-title;
     font-weight: bold;
-    margin-bottom: 0;
+    margin-bottom: $line-height / 2;
+  }
+
+  label,
+  .form-label {
+
+    + .help-text {
+      margin-top: rem-calc(-12);
+    }
   }
 
   .globalize-languages {
@@ -589,22 +599,24 @@ code {
 .reveal {
   border-radius: rem-calc(12);
 
+  @include breakpoint(large) {
+    .row {
+      display: flex;
+      margin-bottom: $line-height * 2;
+    }
+
+    .column {
+      display: flex;
+      flex-flow: column;
+
+      &:last-child {
+        border-left: 2px solid $admin-border;
+      }
+    }
+  }
+
   &:focus {
     outline: 0;
-  }
-
-  .row {
-    display: flex;
-    margin-bottom: $line-height * 2;
-  }
-
-  .column {
-    display: flex;
-    flex-flow: column;
-
-    &:last-child {
-      border-left: 2px solid $admin-border;
-    }
   }
 
   .reveal-description {
@@ -623,6 +635,7 @@ code {
     color: $admin-text;
     font-size: rem-calc(24);
     margin-bottom: $line-height * 2;
+    margin-top: $line-height;
     text-align: center;
     text-transform: uppercase;
   }
@@ -641,6 +654,13 @@ code {
     height: rem-calc(30);
     width: rem-calc(30);
   }
+
+  .button {
+
+    &.hollow {
+      display: inline-table;
+    }
+  }
 }
 
 .form-section-divider {
@@ -648,6 +668,7 @@ code {
   clear: both;
   font-size: $small-font-size;
   font-weight: bold;
+  margin-top: $line-height * 2;
   position: relative;
   text-transform: uppercase;
 
