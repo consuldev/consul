@@ -70,6 +70,10 @@
         <%= render("shared/order_links", i18n_namespace: "budgets.investments.index") %>
       <% end %>
 
+      <div class="float-right">
+        <%= render "shared/filter_selector", i18n_namespace: "budgets.investments.index" %>
+      </div>
+
       <% if investments_default_view? %>
 
         <% @investments.each do |investment| %>

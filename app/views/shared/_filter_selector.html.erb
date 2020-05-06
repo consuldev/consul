@@ -1,0 +1,19 @@
+<form class="inline-block medium-collapse filter-selector">
+  <div class="small-12 medium-6 column">
+    <label for="filter_selector" class="small"><%= t("#{i18n_namespace}.filter") %></label>
+  </div>
+  <div class="small-12 medium-6 column">
+    <select class="js-location-changer"
+            data-order="<%= @current_filter %>"
+            name="filter-selector"
+            id="filter_selector"
+            title="<%= t("#{i18n_namespace}.filter") %>">
+      <% @valid_filters.each do |filter| %>
+        <option <%= "selected" if filter == @current_filter %>
+          value="<%= current_path_with_query_params(filter: filter, page: 1) %>">
+          <%= t("#{i18n_namespace}.filters.#{filter}") %>
+        </option>
+      <% end %>
+    </select>
+  </div>
+</form>
