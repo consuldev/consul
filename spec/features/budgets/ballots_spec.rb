@@ -64,8 +64,8 @@ describe "Ballots" do
       scenario "Groups" do
         visit budget_path(budget)
 
-        expect(page).to have_link "City"
-        expect(page).to have_link "Districts"
+        expect(page).to have_content "City"
+        expect(page).to have_content "Districts"
       end
 
       scenario "Headings" do
@@ -75,16 +75,12 @@ describe "Ballots" do
         create(:budget_heading, group: districts, name: "District 2")
 
         visit budget_path(budget)
-        click_link "City"
+        click_link "See all investments"
 
-        expect(page).to have_link "Investments Type1"
-        expect(page).to have_link "Investments Type2"
-
-        visit budget_path(budget)
-        click_link "Districts"
-
-        expect(page).to have_link "District 1"
-        expect(page).to have_link "District 2"
+        expect(page).to have_content "Investments Type1"
+        expect(page).to have_content "Investments Type2"
+        expect(page).to have_link "District 1 €1,000,000"
+        expect(page).to have_link "District 2 €1,000,000"
       end
 
       scenario "Investments" do
@@ -105,38 +101,27 @@ describe "Ballots" do
         end
 
         visit budget_path(budget)
-        click_link "City"
-        click_link "Above the city"
+        click_link "See all investments"
+        click_link "Above the city €1,000,000"
 
         expect(page).to have_css(".budget-investment", count: 2)
         expect(page).to have_content "Solar panels"
         expect(page).to have_content "Observatory"
 
         visit budget_path(budget)
-
-        click_link "Districts"
-        click_link "District 1"
+        click_link "See all investments"
+        click_link "District 1 €1,000,000"
 
         expect(page).to have_css(".budget-investment", count: 2)
         expect(page).to have_content "New park"
         expect(page).to have_content "Zero-emission zone"
 
         visit budget_path(budget)
-        click_link "Districts"
-        click_link "District 2"
+        click_link "See all investments"
+        click_link "District 2 €1,000,000"
 
         expect(page).to have_css(".budget-investment", count: 1)
         expect(page).to have_content "Climbing wall"
-      end
-
-      scenario "Redirect to first heading if there is only one" do
-        city_heading    = create(:budget_heading, group: city, name: "City")
-        city_investment = create(:budget_investment, :selected, heading: city_heading)
-
-        visit budget_path(budget)
-        click_link "City"
-
-        expect(page).to have_content city_investment.title
       end
     end
 
@@ -146,8 +131,8 @@ describe "Ballots" do
         create(:budget_investment, :selected, heading: new_york, price: 20000, title: "Paint cabs black")
 
         visit budget_path(budget)
-        click_link "States"
-        click_link "New York"
+        click_link "See all investments"
+        click_link "New York €1,000,000"
 
         add_to_ballot("Bring back King Kong")
 
@@ -176,8 +161,8 @@ describe "Ballots" do
         investment = create(:budget_investment, :selected, heading: new_york, price: 10000, balloters: [user])
 
         visit budget_path(budget)
-        click_link "States"
-        click_link "New York"
+        click_link "See all investments"
+        click_link "New York €1,000,000"
 
         expect(page).to have_content investment.title
         expect(page).to have_css("#amount-spent", text: "€10,000")
@@ -207,8 +192,8 @@ describe "Ballots" do
         create(:budget_investment, :selected, heading: new_york, price: 10000, title: "More bridges")
 
         visit budget_path(budget)
-        click_link "States"
-        click_link "New York"
+        click_link "See all investments"
+        click_link "New York €1,000,000"
 
         within("#sidebar") do
           expect(page).to have_content "OpenStreetMap"
@@ -244,7 +229,8 @@ describe "Ballots" do
         create(:budget_investment, :selected, heading: district_heading2, price: 30000, title: "Expensive")
 
         visit budget_path(budget)
-        click_link "City"
+        click_link "See all investments"
+        click_link "All city €10,000,000"
 
         add_to_ballot("Cheap")
 
@@ -257,8 +243,8 @@ describe "Ballots" do
         end
 
         visit budget_path(budget)
-        click_link "Districts"
-        click_link "District 1"
+        click_link "See all investments"
+        click_link "District 1 €1,000,000"
 
         expect(page).to have_css("#amount-spent", text: "€0")
         expect(page).to have_css("#amount-spent", text: "€1,000,000")
@@ -277,7 +263,8 @@ describe "Ballots" do
         end
 
         visit budget_path(budget)
-        click_link "City"
+        click_link "See all investments"
+        click_link "All city €10,000,000"
 
         expect(page).to have_css("#amount-spent",     text: "€10,000")
         expect(page).to have_css("#amount-available", text: "€9,990,000")
@@ -291,8 +278,8 @@ describe "Ballots" do
         end
 
         visit budget_path(budget)
-        click_link "Districts"
-        click_link "District 2"
+        click_link "See all investments"
+        click_link "District 2 €2,000,000"
 
         expect(page).to have_content("You have active votes in another heading: District 1")
       end
@@ -318,13 +305,13 @@ describe "Ballots" do
       create(:budget_investment, :selected, heading: california, title: "Green beach")
 
       visit budget_path(budget)
-      click_link "States"
-      click_link "California"
+      click_link "See all investments"
+      click_link "California €1,000"
 
       add_to_ballot("Green beach")
 
       visit budget_path(budget)
-      click_link "States"
+      click_link "See all investments"
 
       expect(page).to have_content "California"
       expect(page).to have_css("#budget_heading_#{california.id}.is-active")
@@ -346,7 +333,7 @@ describe "Ballots" do
       add_to_ballot("Avengers Tower")
 
       visit budget_path(budget)
-      click_link "States"
+      click_link "See all investments"
       expect(page).to have_css("#budget_heading_#{new_york.id}.is-active")
       expect(page).not_to have_css("#budget_heading_#{california.id}.is-active")
     end
@@ -363,16 +350,6 @@ describe "Ballots" do
   end
 
   context "Showing the ballot" do
-    scenario "Do not display heading name if there is only one heading in the group (example: group city)" do
-      group = create(:budget_group, budget: budget)
-      heading = create(:budget_heading, group: group)
-      visit budget_path(budget)
-      click_link group.name
-      # No need to click on the heading name
-      expect(page).to have_content("Investment projects with scope: #{heading.name}")
-      expect(page).to have_current_path(budget_investments_path(budget), ignore_query: true)
-    end
-
     scenario "Displaying the correct group, heading, count & amount" do
       group1 = create(:budget_group, budget: budget)
       group2 = create(:budget_group, budget: budget)
@@ -540,8 +517,8 @@ describe "Ballots" do
 
       login_as(user)
       visit budget_path(budget)
-      click_link states.name
-      click_link new_york.name
+      click_link "See all investments"
+      click_link "New York €1,000,000"
 
       expect(page).not_to have_css("#budget_investment_#{investment.id}")
     end
@@ -551,8 +528,8 @@ describe "Ballots" do
 
       login_as(user)
       visit budget_path(budget)
-      click_link states.name
-      click_link new_york.name
+      click_link "See all investments"
+      click_link "New York €1,000,000"
 
       within("#budget-investments") do
         expect(page).not_to have_css("div.ballot")
@@ -670,8 +647,8 @@ describe "Ballots" do
 
       login_as(user)
       visit budget_path(budget)
-      click_link "States"
-      click_link "New York"
+      click_link "See all investments"
+      click_link "New York €1,000,000"
 
       new_york.update!(price: 10)
 
