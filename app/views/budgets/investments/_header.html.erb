@@ -4,31 +4,26 @@
 
       <div class="row">
         <div class="small-12 column">
-          <%= back_link_to budgets_path %>
-
-          <% if can? :show, @ballot %>
-            <%= link_to t("budgets.investments.header.check_ballot"),
-                        budget_ballot_path(@budget),
-                        class: "button float-right" %>
-          <% end %>
+          <%= back_link_to budgets_path, @budget.name %>
         </div>
       </div>
 
       <div class="row progress-votes">
         <div class="small-12 column">
           <% if can? :show, @ballot %>
-            <div id="check-ballot" style="display: none;">
-              <%= link_to t("budgets.investments.header.check_ballot"),
-                          budget_ballot_path(@budget) %>
-            </div>
             <% if @ballot.valid_heading?(@heading) %>
               <div class="progress-bar-nav" data-fixed-bar>
                 <h2>
                   <%= t("budgets.investments.index.by_heading", heading: @heading.name) %>
                 </h2>
-                <div id="progress_bar" class="no-margin-top">
+                <span id="progress_bar">
                   <%= render "budgets/ballot/progress_bar" %>
-                </div>
+                </span>
+
+                <%= link_to t("budgets.investments.header.check_ballot"),
+                              budget_ballot_path(@budget),
+                              class: "button float-right" %>
+
               </div>
             <% else %>
               <h2>

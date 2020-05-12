@@ -202,6 +202,30 @@
   }
 }
 
+.supported {
+
+  .button {
+
+    &.remove-support {
+      background: #e7eaec;
+      color: $brand;
+      font-weight: bold;
+      margin-top: $line-height;
+      padding-left: rem-calc(30);
+      position: relative;
+
+      &::before {
+        content: "\f00d";
+        font-family: "Font Awesome 5 Free";
+        font-size: $small-font-size;
+        left: 12px;
+        position: absolute;
+        top: 16px;
+      }
+    }
+  }
+}
+
 .supports-container {
   border-top: 1px solid $border;
 
@@ -1445,6 +1469,7 @@
     margin-bottom: 0;
   }
 
+  h1,
   h2,
   h3,
   .back,
@@ -1797,55 +1822,54 @@
 
   .progress {
     background: #212033;
+    border-radius: rem-calc(12);
     clear: both;
+    height: $line-height;
+    margin: $line-height 0;
+    overflow: hidden;
   }
 
   .progress-meter {
     background: #fdcb10;
-    border-radius: 0;
+    border-radius: rem-calc(12);
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
     transition: width 2s;
-  }
-
-  .spent-amount-progress,
-  .spent-amount-meter {
-    background: none !important;
-  }
-
-  .spent-amount-text {
-    color: #fff;
-    font-size: $base-font-size;
-    font-weight: normal;
-    position: absolute;
-    right: 0;
-    text-align: right;
-    top: 16px;
-    width: 100%;
-
-    &::before {
-      color: #a5a1ff;
-      content: "\57";
-      font-family: "icons";
-      font-size: $small-font-size;
-      position: absolute;
-      right: -6px;
-      top: -17px;
-    }
   }
 
   .total-amount {
     color: #fff;
-    font-size: rem-calc(18);
-    font-weight: bold;
     float: right;
+    font-size: $small-font-size;
+    font-weight: bold;
+    text-align: right;
+    text-transform: uppercase;
+
+    .amount-price {
+      font-size: rem-calc(24);
+      font-weight: bold;
+    }
   }
 
   .amount-available {
-    display: block;
-    text-align: right;
+    text-transform: uppercase;
 
-    span {
-      font-size: rem-calc(24);
+    .amount-available-price {
+      font-size: rem-calc(36);
       font-weight: bold;
+    }
+  }
+
+  .button {
+    min-width: rem-calc(240);
+    position: relative;
+
+    &::after {
+      content: "\f054";
+      font-family: "Font Awesome 5 Free";
+      font-weight: bold;
+      position: absolute;
+      right: 24px;
     }
   }
 }
@@ -1897,12 +1921,20 @@
   }
 }
 
+.my-ballot {
+  float: left;
+  font-size: rem-calc(60);
+  line-height: $line-height * 2.5;
+  margin-right: 12px;
+}
+
 .ballot-list {
   list-style: none;
   margin-left: 0;
 
   li {
-    background: #f9f9f9;
+    background: #f1f1f1;
+    border-radius: rem-calc(12);
     line-height: $line-height;
     margin-bottom: $line-height / 4;
     padding: $line-height $line-height / 2;
@@ -1912,27 +1944,32 @@
       color: $text;
     }
 
-    span {
+    .ballot-list-title {
       display: block;
-      font-style: italic;
+      max-width: 90%;
+    }
+
+    .ballot-list-price {
+      color: $budget;
+      display: block;
+      font-weight: bold;
+      margin-top: $line-height;
+      text-align: right;
     }
 
     .remove-investment-project {
       display: block;
       height: 0;
 
-      .icon-x {
-        color: #9f9f9f;
-        font-size: rem-calc(24);
+      .fa-times {
+        color: $text;
+        font-size: rem-calc(20);
+        font-weight: bold;
         line-height: $line-height / 2;
         position: absolute;
-        right: 6px;
+        right: 12px;
         text-decoration: none;
-        top: 6px;
-
-        @include breakpoint(medium) {
-          font-size: $base-font-size;
-        }
+        top: 12px;
       }
     }
 
@@ -1960,24 +1997,48 @@
 
   @include breakpoint(medium) {
     background-color: $budget;
+    padding-top: $line-height * 2;
     transition: height 0.3s;
 
     h2 {
+      display: inline-block;
+      font-size: rem-calc(36);
       margin-bottom: $line-height / 2;
+      max-width: 70%;
       transition: font-size 0.3s;
     }
 
     &.is-fixed {
+      box-shadow: 0 12px 12px 0 rgba(0, 0, 0, 0.2);
       height: auto;
       left: 0;
       padding: $line-height;
+      padding-bottom: 0;
+      padding-top: $line-height / 2;
+      pointer-events: none;
       position: fixed;
       top: 0;
       width: 100%;
 
-      h2 {
+      h2,
+      .amount-available-price {
         font-size: rem-calc(24);
-        transition: font-size 0.3s;
+      }
+
+      .amount-price {
+        font-size: $base-font-size;
+      }
+
+      p {
+        margin-bottom: 0;
+      }
+
+      .button {
+        pointer-events: auto;
+      }
+
+      .progress {
+        margin: $line-height / 2 0;
       }
     }
   }
