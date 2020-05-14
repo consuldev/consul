@@ -202,6 +202,30 @@
   }
 }
 
+.supported {
+
+  .button {
+
+    &.button-remove-support {
+      background: #e7eaec;
+      color: $brand;
+      font-weight: bold;
+      margin-top: $line-height;
+      padding-left: rem-calc(30);
+      position: relative;
+
+      &::before {
+        content: "\f00d";
+        font-family: "Font Awesome 5 Free";
+        font-size: $base-font-size;
+        left: 30px;
+        position: absolute;
+        top: 14px;
+      }
+    }
+  }
+}
+
 .supports-container {
   border-top: 1px solid $border;
 
@@ -1011,6 +1035,8 @@
     .button-support {
       background: $budget;
       color: #fff;
+      font-size: $base-font-size;
+      font-weight: bold;
 
       &:hover {
         background: $budget-hover;
