@@ -406,7 +406,7 @@ describe "Ballots" do
     expect(page).to have_content("You have voted one investment")
 
     within("#budget_investment_#{investment.id}") do
-      find(".icon-x").click
+      find(".fas.fa-times").click
     end
 
     expect(page).to have_current_path(budget_ballot_path(budget))
@@ -462,7 +462,7 @@ describe "Ballots" do
     expect(page).to have_content("You have voted one investment")
 
     within(".ballot-list li", text: "Sully monument") do
-      find(".icon-x").click
+      find(".fas.fa-times").click
     end
 
     expect(page).to have_content("You have voted 0 investments")
