@@ -1465,6 +1465,19 @@
 
   &.budget-heading {
     min-height: $line-height * 10;
+
+    .button {
+      min-width: rem-calc(240);
+      position: relative;
+
+      &::after {
+        content: "\f054";
+        font-family: "Font Awesome 5 Free";
+        font-weight: bold;
+        position: absolute;
+        right: 24px;
+      }
+    }
   }
 
   h2 {
