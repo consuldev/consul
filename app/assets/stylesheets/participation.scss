@@ -1923,12 +1923,19 @@
   }
 }
 
+.my-ballot {
+  float: left;
+  font-size: rem-calc(40);
+  margin-right: 12px;
+}
+
 .ballot-list {
   list-style: none;
   margin-left: 0;
 
   li {
-    background: #f9f9f9;
+    background: #f1f1f1;
+    border-radius: rem-calc(12);
     line-height: $line-height;
     margin-bottom: $line-height / 4;
     padding: $line-height $line-height / 2;
@@ -1938,27 +1945,32 @@
       color: $text;
     }
 
-    span {
+    .ballot-list-title {
       display: block;
-      font-style: italic;
+      max-width: 90%;
+    }
+
+    .ballot-list-price {
+      color: $budget;
+      display: block;
+      font-weight: bold;
+      margin-top: $line-height;
+      text-align: right;
     }
 
     .remove-investment-project {
       display: block;
       height: 0;
 
-      .icon-x {
-        color: #9f9f9f;
-        font-size: rem-calc(24);
+      .fa-times {
+        color: $text;
+        font-size: rem-calc(20);
+        font-weight: bold;
         line-height: $line-height / 2;
         position: absolute;
-        right: 6px;
+        right: 12px;
         text-decoration: none;
-        top: 6px;
-
-        @include breakpoint(medium) {
-          font-size: $base-font-size;
-        }
+        top: 12px;
       }
     }
 
@@ -1973,7 +1985,7 @@
         text-decoration: none;
       }
 
-      .remove-investment-project .icon-x {
+      .remove-investment-project .fa-times {
         color: #fff;
       }
     }

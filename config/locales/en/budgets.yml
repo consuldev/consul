@@ -85,10 +85,10 @@ en:
         sidebar:
           my_ballot: My ballot
           voted:
-            one: "<strong>You voted one proposal with a cost of %{amount_spent}</strong>"
-            other: "<strong>You voted %{count} proposals with a cost of %{amount_spent}</strong>"
-          voted_info: You can %{link} at any time until the close of this phase. No need to spend all the money available.
-          voted_info_link: change your vote
+            one: "You voted <strong>one investment</strong> with a cost of %{amount_spent}</strong>"
+            other: "You voted <strong>%{count} investments</strong> with a cost of %{amount_spent}</strong>"
+          voted_info: "<strong>%{link}</strong> at any time until the %{phase_end_date}. No need to spend all the money available."
+          voted_info_link: "Change your votes"
           different_heading_assigned: "You have active votes in another heading: %{heading_link}"
           change_ballot: "If your change your mind you can remove your votes in %{check_ballot} and start again."
           check_ballot_link: "check and confirm my ballot"

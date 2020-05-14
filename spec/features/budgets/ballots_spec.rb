@@ -433,7 +433,7 @@ describe "Ballots" do
     end
 
     within("#sidebar #budget_investment_#{investment1.id}_sidebar") do
-      find(".icon-x").click
+      find(".fas.fa-times").click
     end
 
     expect(page).to have_css("#amount-spent", text: "€20,000")
@@ -630,7 +630,7 @@ describe "Ballots" do
       end
 
       within("#budget_investment_#{bi1.id}_sidebar") do
-        find(".icon-x").click
+        find(".fas.fa-times").click
       end
 
       expect(page).not_to have_css "#budget_investment_#{bi1.id}_sidebar"
