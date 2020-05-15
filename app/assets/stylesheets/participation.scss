@@ -1837,12 +1837,19 @@
 
   .progress {
     background: #212033;
+    border-radius: rem-calc(12);
     clear: both;
+  }
+
+  .progress-bar-indicator {
+    overflow: hidden;
   }
 
   .progress-meter {
     background: #fdcb10;
-    border-radius: 0;
+    border-radius: rem-calc(12);
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
     transition: width 2s;
   }
 
@@ -1876,12 +1883,17 @@
     color: #fff;
     font-size: rem-calc(18);
     font-weight: bold;
-    float: right;
+    text-transform: uppercase;
+
+    @include breakpoint(medium) {
+      float: right;
+    }
   }
 
   .amount-available {
     display: block;
     text-align: right;
+    text-transform: uppercase;
 
     span {
       font-size: rem-calc(24);
@@ -2007,6 +2019,14 @@
 }
 
 .progress-bar-nav {
+
+  h2 {
+    margin-bottom: $line-height * 2;
+    margin-top: $line-height;
+  }
+}
+
+.progress-bar-nav {
   position: relative;
   z-index: 3;
 
@@ -2016,6 +2036,7 @@
 
     h2 {
       margin-bottom: $line-height / 2;
+      margin-top: 0;
       transition: font-size 0.3s;
     }
 

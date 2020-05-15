@@ -155,10 +155,10 @@ es:
         different_heading_assigned: "Ya apoyaste proyectos de otra sección del presupuesto: %{heading_link}"
         change_ballot: "Si cambias de opinión puedes borrar tus votos en %{check_ballot} y volver a empezar."
         check_ballot_link: "revisar y confirmar mis votos"
-        price: "Esta partida tiene un presupuesto de"
+        price: "Presupuesto total"
     progress_bar:
-      assigned: "Has asignado: "
-      available: "Presupuesto disponible: "
+      assigned: "Usado"
+      available: "Todavía disponible"
     show:
       phase: Fase actual
       see_results: Ver resultados

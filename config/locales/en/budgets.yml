@@ -156,10 +156,10 @@ en:
         different_heading_assigned: "You have active votes in another heading: %{heading_link}"
         change_ballot: "If your change your mind you can remove your votes in %{check_ballot} and start again."
         check_ballot_link: "submit my ballot"
-        price: "This heading has a budget of"
+        price: "Total budget"
     progress_bar:
-      assigned: "You have assigned: "
-      available: "Available budget: "
+      assigned: "Used"
+      available: "Still available to you"
     show:
       phase: Actual phase
       see_results: See results
