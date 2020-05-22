@@ -47,4 +47,22 @@ module LegislationHelper
       "background: #{@process.background_color};color: #{@process.font_color};"
     end
   end
+
+  def phase_status(start_date, end_date)
+    today = Date.current
+
+    if today >= start_date && today <= end_date
+      t("legislation.processes.header.active")
+    else
+      t("legislation.processes.header.locked")
+    end
+  end
+
+  def published?(published_date)
+    today = Date.current
+
+    return t("legislation.processes.header.published") if today >= published_date
+
+    t("legislation.processes.header.coming_soon")
+  end
 end
