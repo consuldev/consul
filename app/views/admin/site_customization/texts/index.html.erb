@@ -2,7 +2,7 @@
 
 <h3>Edit by category</h3>
 
-<%= select("category", "filename", @files.collect {|f| [ f[:name], f[:id] ] }, include_blank: "Select a category") %>
+<%= select("category", "filename", @files.collect { |file| [file[:name], file[:id]] }, include_blank: "Select a category") %>
 
 <script>
 $( document ).ready(function() {

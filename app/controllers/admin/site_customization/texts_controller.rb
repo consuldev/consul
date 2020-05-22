@@ -4,7 +4,7 @@ class Admin::SiteCustomization::TextsController < Admin::SiteCustomization::Base
   end
 
   def edit
-    file = find_locale_file(params[:id]) or raise ActionController::RoutingError, "Not Found"
+    (file = find_locale_file(params[:id])) || raise(ActionController::RoutingError, "Not Found")
     file = YAML.load_file(file[:path])
 
     @translations = flatten_hash(file)
@@ -30,12 +30,12 @@ class Admin::SiteCustomization::TextsController < Admin::SiteCustomization::Base
     end
 
     def find_locale_file(id)
-      locale_files.find {|file| file[:id] === id }
+      locale_files.find { |file| file[:id] === id }
     end
 
-    def flatten_hash(param, prefix=nil)
+    def flatten_hash(param, prefix = nil)
       param.each_pair.reduce({}) do |a, (k, v)|
         v.is_a?(Hash) ? a.merge(flatten_hash(v, "#{prefix}#{k}.")) : a.merge("#{prefix}#{k}".to_sym => v)
       end
-    end    
+    end
 end
