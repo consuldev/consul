@@ -1,4 +1,6 @@
 class Admin::SiteCustomization::TextsController < Admin::SiteCustomization::BaseController
+  before_action :change_language, only: [:index]
+
   def index
     @files = locale_files
   end
@@ -12,8 +14,16 @@ class Admin::SiteCustomization::TextsController < Admin::SiteCustomization::Base
 
   private
 
+    def change_language
+      if params[:language].present?
+        session[:customization_language] = params[:language]
+        flash[:notice] = "Changed language"
+      end
+    end
+
     def locale_directory
-      Rails.root.join("config", "locales", "en")
+      language = (session[:customization_language] || "en")
+      Rails.root.join("config", "locales", language)
     end
 
     def locale_files

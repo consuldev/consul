@@ -1,13 +1,29 @@
 <h2><%= "tTODO Custom texts" %></h2>
 
+<h3>Select a language</h3>
+
+<!-- options_for_add_language -->
+
+<select id="custom-language">
+  <%= options_for_select([["English", "en"], ["Dutch", "nl"], ["German", "de-DE"]], selected: session[:customization_language]) %>
+</select>
+
 <h3>Edit by category</h3>
 
 <%= select("category", "filename", @files.collect { |file| [file[:name], file[:id]] }, include_blank: "Select a category") %>
 
+<h3>Search for strings</h3>
+
+<input type="text" placeholder="Text to match" />
+
 <script>
-$( document ).ready(function() {
-    $('select').on('change', function () {
-        window.location.href = "/admin/site_customization/texts/" + this.value + "/edit";
-    });
+$(document).ready(function() {
+  $('select#custom-language').on('change', function() {
+    window.location.href = "/admin/site_customization/texts?language=" + this.value;
+  });
+
+  $('select:last').on('change', function() {
+    window.location.href = "/admin/site_customization/texts/" + this.value + "/edit";
+  });
 });
 </script>
