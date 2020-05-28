@@ -82,6 +82,42 @@ describe "Legislation" do
       expect(page).to have_content("01 ene 2018 - 01 dic 2018")
     end
 
+    scenario "Participation phases show their status" do
+      travel_to "01/06/2020".to_date
+
+      process = create(:legislation_process, debate_start_date: "01/05/2020",
+                                             debate_end_date: "30/05/2020",
+                                             proposals_phase_start_date: "01/06/2020",
+                                             proposals_phase_end_date: "30/06/2020",
+                                             draft_publication_date: "20/05/2020",
+                                             allegations_start_date: "01/06/2020",
+                                             allegations_end_date: "05/06/2020",
+                                             result_publication_date: "01/07/2020")
+
+      visit legislation_processes_path
+
+      within(".legislation-calendar") do
+        expect(page).to have_content "Debate\n01 May 2020 - 30 May 2020\nLocked"
+        expect(page).to have_content "Draft publication\n20 May 2020\nPublished"
+        expect(page).to have_content "Proposals\n01 Jun 2020 - 30 Jun 2020\nActive"
+        expect(page).to have_content "Comments\n01 Jun 2020 - 05 Jun 2020\nActive"
+        expect(page).to have_content "Final result publication\n01 Jul 2020\nComing soon"
+      end
+
+      visit legislation_process_path(process)
+
+      within(".legislation-content") do
+        expect(page).to have_content "Draft publication\n20 May 2020"
+        expect(page).to have_content "Final result publication\n01 Jul 2020"
+      end
+
+      within(".legislation-process-list") do
+        expect(page).to have_content "Debate\n01 May 2020 - 30 May 2020 Locked"
+        expect(page).to have_content "Proposals\n01 Jun 2020 - 30 Jun 2020 Active"
+        expect(page).to have_content "Comments\n01 Jun 2020 - 05 Jun 2020 Active"
+      end
+    end
+
     scenario "Filtering processes" do
       create(:legislation_process, title: "Process open")
       create(:legislation_process, :past, title: "Process past")
