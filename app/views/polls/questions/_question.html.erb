@@ -1,9 +1,17 @@
 <div id="<%= dom_id(question) %>" class="poll-question">
   <span class="question-list-label"><%= t("polls.question") %> <%= index + 1 %></span>
 
-  <h3>
+  <h3 class="inline-block">
     <%= question.title %>
   </h3>
+
+  <% question.question_answers.any? do |answer| %>
+    <% if answer.description.present? %>
+      <a href="#answer_<%= "#{answer.id}" %>" class="small" data-smooth-scroll>
+        <%= t("polls.show.more_info_options") %>
+      </a>
+    <% end %>
+  <% end %>
 
   <div id="<%= dom_id(question) %>_answers" class="padding">
     <%= render "polls/questions/answers", question: question, token: token %>
