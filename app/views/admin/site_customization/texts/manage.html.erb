@@ -1,0 +1,10 @@
+<%= render "header" %>
+
+<% if @translations.count > 0 %>
+  <% @translations.each do |translation| %>
+  <%= label_tag translation.i18n_content.key, translation.i18n_content.key %>
+  <%= text_field_tag translation.value, translation.value %>
+  <% end %>
+<% else %>
+  <p><%= t('admin.menu.site_customization.custom_texts.manage.no_translations') %></p>
+<% end %>

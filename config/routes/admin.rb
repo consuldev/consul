@@ -234,7 +234,9 @@ namespace :admin do
     delete "/heading_content_blocks/:id", to: "content_blocks#delete_heading_content_block", as: "delete_heading_content_block"
     get "/edit_heading_content_blocks/:id", to: "content_blocks#edit_heading_content_block", as: "edit_heading_content_block"
     put "/update_heading_content_blocks/:id", to: "content_blocks#update_heading_content_block", as: "update_heading_content_block"
-    resources :texts, only: [:index, :edit]
+    resources :texts, only: [:index, :edit] do 
+      get :manage, on: :collection
+    end
     resources :information_texts, only: [:index] do
       post :update, on: :collection
     end

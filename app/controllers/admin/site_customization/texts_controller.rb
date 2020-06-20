@@ -12,12 +12,20 @@ class Admin::SiteCustomization::TextsController < Admin::SiteCustomization::Base
     @translations = flatten_hash(file)
   end
 
+  def manage
+    @translations = I18nContentTranslation
+                      .includes(:i18n_content)
+                      .where(locale: session[:customization_language])
+  end
+
   private
 
     def change_language
+      return if session[:customization_language] == params[:language]
+
       if params[:language].present?
         session[:customization_language] = params[:language]
-        flash[:notice] = "Changed language"
+        flash[:notice] = "Changed language to #{session[:customization_language]}"
       end
     end
 

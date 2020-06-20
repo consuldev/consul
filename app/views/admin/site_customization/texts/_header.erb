@@ -1,0 +1,52 @@
+<h2><%= t("admin.menu.site_customization.custom_texts.header.title")%></h2>
+<p><%= t("admin.menu.site_customization.custom_texts.header.feature_description")%></p>
+
+<div class="row globalize-languages column padding-top <%= highlight_translation_html_class %>">
+  <div class="small-6 large-3 column">
+    <strong><%= t("admin.menu.site_customization.custom_texts.header.selected_language") %></strong>
+
+    <!-- options_for_add_language -->
+
+    <select id="custom-language">
+      <%= options_for_select([["English", "en"], ["Dutch", "nl"], ["German", "de-DE"]], selected: session[:customization_language]) %>
+    </select>
+
+    <div class="margin-bottom">
+      <!-- x -->
+    </div>
+  </div>
+</div>
+
+<br>
+
+<ul class="menu simple clear">
+  <% if action_name == 'manage' %>
+    <li>
+      <a href="/admin/site_customization/texts"><%= t('admin.menu.site_customization.custom_texts.tabs.create') %></a>
+    </li>
+    <li class="is-active">
+     <h2><a href="/admin/site_customization/texts/manage"><%= t('admin.menu.site_customization.custom_texts.tabs.manage') %></a></h2>
+    </li>
+  <% else %>
+    <li class="is-active">
+      <h2><a href="/admin/site_customization/texts"><%= t('admin.menu.site_customization.custom_texts.tabs.create') %></a></h2>
+    </li>
+    <li>
+     <a href="/admin/site_customization/texts/manage"><%= t('admin.menu.site_customization.custom_texts.tabs.manage') %></a>
+    </li>
+  <% end %>
+</ul>
+
+<%= yield %>
+
+<script>
+$(document).ready(function() {
+  $('select#custom-language').on('change', function() {
+    window.location.href = "/admin/site_customization/texts?language=" + this.value;
+  });
+
+  $('select#category_filename').on('change', function() {
+    window.location.href = "/admin/site_customization/texts/" + this.value + "/edit";
+  });
+});
+</script>

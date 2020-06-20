@@ -743,6 +743,16 @@ en:
         pages: Custom pages
         images: Custom images
         content_blocks: Custom content blocks
+        custom_texts:
+          header:
+            title: Custom texts
+            feature_description: This feature allows you to overwrite any text or translation in CONSUL.
+            selected_language: Selected language
+          tabs:
+            create: Create new texts
+            manage: Manage existing texts
+          manage:
+            no_translations: There are no existing custom texts for the selected language.
         information_texts: Custom information texts
         information_texts_menu:
           basic: "Basic customization"
