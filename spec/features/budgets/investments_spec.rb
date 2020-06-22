@@ -165,8 +165,8 @@ describe "Budget Investments" do
 
     visit budget_investments_path(budget_new, heading_id: heading_new.id)
 
-    expect(page).to have_select("filter_selector", options: ["Not unfeasible", "Feasible", "Unfeasible",
-                                                             "Unselected", "Selected", "Winners"])
+    options = find("#filter_selector").all("option").map { |option| option.text.strip }
+    expect(options).to eq ["Not unfeasible", "Feasible", "Unfeasible", "Unselected", "Selected", "Winners"]
 
     select "Feasible", from: "filter_selector"
     feasible_path = budget_investments_path(budget_new, heading_id: heading_new.id,

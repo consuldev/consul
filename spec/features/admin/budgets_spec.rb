@@ -86,7 +86,7 @@ describe "Admin budgets" do
         expect(page).to have_content("(7/9)")
         expect(page).to have_content("9 months")
         expect(page).to have_content("#{budget_multiple.phases.first.starts_at.to_date} 00:00 - "\
-                                     "#{budget_multiple.phases.last.ends_at.to_date - 1}  23:59")
+                                     "#{budget_multiple.phases.last.ends_at.to_date - 1} 23:59")
       end
     end
 
