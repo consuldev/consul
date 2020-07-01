@@ -180,8 +180,8 @@ describe "Polls" do
       expect(page).to have_content(poll.summary)
       expect(page).to have_content(poll.description)
 
-      expect(page).to have_content("Question 1 #{proposal_question.title}", normalize_ws: true)
-      expect(page).to have_content("Question 2 #{normal_question.title}", normalize_ws: true)
+      expect(page).to have_content("Question 1 #{proposal_question.title}")
+      expect(page).to have_content("Question 2 #{normal_question.title}")
     end
 
     scenario "Question answers appear in the given order" do
