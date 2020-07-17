@@ -140,6 +140,14 @@ class User < ApplicationRecord
     )
   end
 
+  def verify_with_zipcode!
+    if zipcode.present?
+      if Zipcode.where(code: zipcode.upcase).any?
+        update!(residence_verified_at: Time.current, verified_at: Time.current)
+      end
+    end
+  end
+
   def name
     organization? ? organization.name : username
   end

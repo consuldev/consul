@@ -43,6 +43,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
       if save_user
         identity.update!(user: @user)
+        @user.verify_with_zipcode!
         sign_in_and_redirect @user, event: :authentication
         set_flash_message(:notice, :success, kind: provider.to_s.capitalize) if is_navigational_format?
       else

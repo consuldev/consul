@@ -709,4 +709,31 @@ describe User do
       expect(User.find_by_manager_login("admin_user_#{user.id}")).to eq user
     end
   end
+
+  describe "#verify_with_zipcode!" do
+    before do
+      Zipcode.create!(code: "28013")
+      expect(subject.level_three_verified?).to be false
+    end
+
+    it "does verify a user with valid zipcode" do
+      subject.update!(zipcode: "28013")
+      subject.verify_with_zipcode!
+
+      expect(subject.level_three_verified?).to be true
+    end
+
+    it "does not verify a user with invalid zipcode" do
+      subject.update!(zipcode: "01234")
+      subject.verify_with_zipcode!
+
+      expect(subject.level_three_verified?).to be false
+    end
+
+    it "does verify a user without any zipcode" do
+      subject.verify_with_zipcode!
+
+      expect(subject.level_three_verified?).to be false
+    end
+  end
 end
